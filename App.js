@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import { Button, Alert, TextInput } from "react-native";
+import { Button, Alert, TextInput,FlatList } from "react-native";
 import { useState } from "react";
 import React from 'react';
 
@@ -9,14 +9,26 @@ export default function App() {
 const [text, setText] = useState("");
 const [text2, setText2] = useState("");
 const [result, setResult] = useState("");
+const [list, setList] = useState([]);
+
 const buttonPressed1 = () => {
-  
-setResult(parseFloat(text) + parseFloat(text2));
+ const res = parseFloat(text) + parseFloat(text2);
+setResult(res);
+ const row = `${text} + ${text2} = ${res}`;
+setList([...list, {key: row}]);
+setText("");
+setText2("");
+
 };
 
 const buttonPressed2 = () => {
-  setResult(parseFloat(text) - parseFloat(text2));
 
+  const res = parseFloat(text) - parseFloat(text2);
+  setResult(res);
+  const row = `${text} - ${text2} = ${res}`;
+setList([...list, {key: row}]);
+setText("");
+setText2("");
 };
 
   return (
@@ -41,12 +53,18 @@ const buttonPressed2 = () => {
    />
 </View>
 
-   <View style={{flex: 2, flexDirection: 'row',alignItems: 'flex-start', justifyContent: 'space-between', gap: 10
+   <View style={{flex: 1, flexDirection: 'row',alignItems: 'flex-start', justifyContent: 'space-between', gap: 10
    }}>
     <Button onPress={buttonPressed1} title="+" />
     <Button onPress={buttonPressed2} title="-" />
   </View>
-      
+      <View style={{alignItems: 'flex-start', flex: 2, flexDirection: 'column', justifyContent: 'flex-start'}}>
+   <Text>History:</Text>
+<FlatList 
+data={list}
+renderItem={({item}) => <Text>{item.key}</Text>} 
+/>
+      </View>
       <StatusBar style="auto" />
     </View>
   );
